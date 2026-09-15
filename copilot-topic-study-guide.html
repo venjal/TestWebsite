@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GitHub Copilot coding agents — topic study guide</title>
+<style>
+:root{
+  --bg:#f6f8fb; --paper:#ffffff; --ink:#132033; --muted:#5b6b82;
+  --brand:#5b5fc7; --brand2:#0f6cbd; --line:#dfe6f1; --soft:#eef2ff;
+  --code:#0f172a; --codeText:#e5e7eb; --success:#0f766e; --warn:#b45309;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:"Segoe UI",system-ui,-apple-system,sans-serif;
+  background:linear-gradient(180deg,#eef4ff 0%,var(--bg) 28%,#ffffff 100%);
+  color:var(--ink); line-height:1.65;
+}
+code,pre,kbd{font-family:"Cascadia Code","Fira Code",Consolas,monospace;font-size:.92em}
+code{background:var(--soft);padding:.08em .35em;border-radius:6px}
+pre{background:var(--code);color:var(--codeText);padding:14px 16px;border-radius:14px;overflow:auto}
+.progress{position:fixed;top:0;left:0;height:4px;width:0;background:linear-gradient(90deg,var(--brand),var(--brand2));z-index:40}
+.shell{max-width:1180px;margin:0 auto;padding:34px 22px 72px}
+.hero{
+  border-radius:30px;padding:36px 32px;color:#fff;margin-bottom:22px;
+  background:
+    radial-gradient(800px 280px at 12% -10%,rgba(91,95,199,.55),transparent 60%),
+    radial-gradient(600px 240px at 100% 0%,rgba(15,108,189,.45),transparent 55%),
+    #0b1b33;
+}
+.eyebrow{text-transform:uppercase;letter-spacing:.16em;font-size:12px;opacity:.8;margin:0 0 8px}
+.hero h1{margin:0 0 10px;font-size:clamp(28px,4vw,42px);line-height:1.15}
+.subtitle{margin:0 0 16px;max-width:72ch;color:#d7e3f7}
+.meta{display:flex;flex-wrap:wrap;gap:8px}
+.pill{display:inline-block;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);font-size:13px}
+.layout{display:grid;grid-template-columns:280px 1fr;gap:22px;align-items:start}
+.toc{position:sticky;top:18px;background:rgba(255,255,255,.72);backdrop-filter:blur(12px);
+  border:1px solid var(--line);border-radius:22px;padding:16px}
+.toc a{display:block;padding:7px 10px;border-radius:10px;color:var(--ink);text-decoration:none;font-size:14px}
+.toc a.active,.toc a:hover{background:var(--soft);color:var(--brand2)}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:26px;padding:26px 26px 20px;
+  box-shadow:0 10px 30px rgba(19,32,51,.05);margin-bottom:18px}
+.card h2{margin-top:0}
+.lead{color:var(--muted)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.mini{background:var(--soft);border-radius:18px;padding:14px 16px}
+.mini h3{margin:0 0 8px;font-size:16px}
+.callout{border-left:5px solid var(--brand);background:var(--soft);padding:12px 14px;border-radius:0 14px 14px 0;margin:14px 0}
+.callout.trainer-note{background:#ecfdf5;border-left-color:var(--success)}
+.callout.warning{background:#fff7ed;border-left-color:var(--warn)}
+.quote{border-left:4px solid var(--brand2);padding-left:12px;color:var(--muted)}
+.links{margin:16px 0 0;padding:0;list-style:none}
+.links li{margin:0 0 8px}
+.links a{color:var(--brand2)}
+table{width:100%;border-collapse:collapse;margin:12px 0 16px;font-size:15px}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--soft)}
+.footer{color:var(--muted);font-size:14px;margin-top:24px}
+@media (max-width:900px){
+  .layout,.grid{grid-template-columns:1fr}
+  .toc{position:static}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+}
+@media print{
+  .progress,.toc{display:none !important}
+  .layout{display:block}
+  .hero{background:#fff;color:#132033;border:1px solid #dfe6f1}
+  .card{box-shadow:none;break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="bar"></div>
+<div class="shell">
+  <header class="hero">
+    <p class="eyebrow">GitHub Copilot · coding agents</p>
+    <h1>Topic study guide</h1>
+    <p class="subtitle">What each exam domain is actually about, the rule underneath it, and the official docs. Practice questions live in your other app. This file is the knowledge layer only.</p>
+    <div class="meta">
+      <span class="pill">Knowledge primer</span>
+      <span class="pill">Official GitHub docs</span>
+      <span class="pill">Offline HTML</span>
+    </div>
+  </header>
+  <div class="layout">
+    <aside class="toc">
+      <strong>Topics</strong>
+      <a href="#map">How the pieces fit</a>
+      <a href="#cloud">Cloud coding agent</a>
+      <a href="#cli">Copilot CLI</a>
+      <a href="#agents">Custom agents</a>
+      <a href="#mcp">MCP</a>
+      <a href="#hooks">Hooks and policy</a>
+      <a href="#memory">Memory</a>
+      <a href="#instructions">Instructions files</a>
+      <a href="#actions">Actions and artifacts</a>
+      <a href="#governance">Rulesets and tokens</a>
+      <a href="#audit">Audit and retention</a>
+      <a href="#modernize">.NET modernization</a>
+      <a href="#cases">Contoso and Litware maps</a>
+    </aside>
+    <main>
+
+<section class="card" id="map">
+  <h2>How the pieces fit</h2>
+  <p class="lead">The exam is not “what does Copilot autocomplete.” It is “how do you give an agent a job, constrain what it can touch, watch it work, and prove a human stayed in the loop.”</p>
+  <p>Treat Copilot as three runtimes that share ideas but not the same files:</p>
+  <div class="grid">
+    <article class="mini">
+      <h3>Cloud coding agent</h3>
+      <p>Runs on GitHub. You assign an issue. It opens a draft PR, writes commits, and streams a session log. Steering happens with <code>@copilot</code> on that PR, from an account that can write to the repo.</p>
+    </article>
+    <article class="mini">
+      <h3>Copilot CLI</h3>
+      <p>Runs on your machine. Plan mode designs first. Autopilot / <code>--yolo</code> executes without prompts. Slash commands manage the token window. Hooks sit in front of tools.</p>
+    </article>
+    <article class="mini">
+      <h3>IDE Chat / VS Code</h3>
+      <p>Interactive. Context is the current chat plus open files. Custom agents, MCP, and instructions files still apply, but a new chat is how you drop stale turns.</p>
+    </article>
+    <article class="mini">
+      <h3>GitHub Actions around the agent</h3>
+      <p>Not the model. Environments, artifacts, concurrency, <code>GITHUB_TOKEN</code> permissions, CodeQL, and audit logs are how the platform enforces what the model is not allowed to ignore.</p>
+    </article>
+  </div>
+  <p class="quote">Mental model: <strong>prompts suggest, platform controls decide.</strong> If the stem wants a guarantee (cannot edit workflows, cannot see another repo, cannot approve its own plan, cannot keep logs two years on GitHub), the answer is almost never an instructions file.</p>
+</section>
+
+<section class="card" id="cloud">
+  <h2>Cloud coding agent</h2>
+  <p class="lead">Background teammate on github.com. The issue is the spec. The draft PR is the workspace. The session log is the truth.</p>
+  <h3>What it is</h3>
+  <p>You assign Copilot to an issue (or start a task from the Agents panel). Copilot acknowledges with an eyes reaction, creates a branch and a draft pull request, and works in an ephemeral environment. When it is done it requests review. Everything it decided lives in the session log, not in the Actions runner log.</p>
+  <h3>Knowledge you need</h3>
+  <ul>
+    <li><strong>The issue body is the prompt.</strong> A one-line “fix login” issue produces an empty or off-scope PR. Fix the spec, do not add tools.</li>
+    <li><strong>Status signals.</strong> Eyes on the issue = assignment accepted. Timeline “Copilot started work” = session is live. Draft PR with no Actions checks often means a human must Approve and run workflows.</li>
+    <li><strong>View session</strong> on the PR is how you watch logs and see why it stopped or shipped zero files.</li>
+    <li><strong>Steer without restart:</strong> comment on the open PR and mention <code>@copilot</code>. The author must have write permission. Copilot ignores comments on merged/closed PRs.</li>
+    <li><strong>Restart a frozen session:</strong> official troubleshooting says unassign the issue and reassign it to Copilot. Sessions can sit still, then time out after about an hour.</li>
+    <li>CLI from a laptop: <code>gh agent-task view &lt;id&gt; --log --follow</code> tails the same session log.</li>
+  </ul>
+  <div class="callout trainer-note">
+    <strong>Two different verbs.</strong> “Resume without redoing completed work” is View session + <code>@copilot</code> on the same PR. “Restart the frozen cloud process onto the existing draft” is unassign / reassign. Read the stem for resume vs restart.
+  </div>
+  <ul class="links">
+    <li><a href="https://docs.github.com/en/copilot/how-tos/use-copilot-agents/cloud-agent/use-cloud-agent-on-github">Use Copilot cloud agent on GitHub</a></li>
+    <li><a href="https://docs.github.com/en/copilot/using-github-copilot/coding-agent/troubleshooting-copilot-coding-agent">Troubleshoot Copilot coding agent</a></li>
+    <li><a href="https://docs.github.com/en/copilot/how-tos/copilot-on-github/use-copilot-agents/manage-and-track-agents">Manage and track agent sessions</a></li>
+  </ul>
+</section>
+
+<section class="card" id="cli">
+  <h2>Copilot CLI</h2>
+  <p class="lead">Local agent loop with modes. The exam tests whether you can tell inspect, compact, plan, and autopilot apart.</p>
+  <table>
+    <tr><th>Move</th><th>What it does</th><th>When you use it</th></tr>
+    <tr><td><code>/context</code></td><td>Shows the token window: model, used vs capacity, system prompt, tools, history.</td><td>You need to <em>see</em> usage. It does not free space.</td></tr>
+    <tr><td><code>/compact</code></td><td>Summarizes older turns and replaces them with a structured recap.</td><td>You need to <em>continue the same session</em> near the limit.</td></tr>
+    <tr><td><code>/usage</code></td><td>Session stats / premium-request style counters.</td><td>Billing-ish stats, not the context map.</td></tr>
+    <tr><td><code>/clear</code></td><td>Drops history.</td><td>You are willing to lose progress.</td></tr>
+    <tr><td>Plan mode</td><td>Reads the repo, writes a Markdown plan (plan.md), waits for approval.</td><td>Complex work. Agree on the approach before any edit.</td></tr>
+    <tr><td>Autopilot + <code>--yolo</code> / <code>--allow-all</code></td><td>Runs without confirmation. Yolo = all tools, paths, and URLs.</td><td>You already approved a plan and accept no human gates.</td></tr>
+  </table>
+  <p>Plan mode is Shift+Tab in the interactive CLI, or an explicit plan-mode switch. After you accept the plan you can hand it to autopilot. Autopilot is local. <code>/delegate</code> is different: it ships the work to the <em>cloud</em> agent and a draft PR.</p>
+  <p><code>--max-autopilot-continues N</code> is the runaway-loop ceiling. Without a cap, autopilot just keeps going. With <code>--yolo</code> there is no targeted human checkpoint.</p>
+  <p>Open editors in VS Code are implicit context. Stale Chat threads pollute answers. Cheapest fix: start a new chat and close unrelated files.</p>
+  <ul class="links">
+    <li><a href="https://docs.github.com/en/copilot/how-tos/copilot-cli/use-copilot-cli/overview">Using GitHub Copilot CLI</a></li>
+    <li><a href="https://docs.github.com/en/copilot/concepts/agents/copilot-cli/context-management">Managing context in Copilot CLI</a></li>
+    <li><a href="https://docs.github.com/en/copilot/concepts/agents/copilot-cli/autopilot">Allowing Copilot CLI to work autonomously</a></li>
+    <li><a href="https://docs.github.com/en/copilot/how-tos/copilot-cli/use-copilot-cli-agents/delegate-tasks-to-cca">Delegate to cloud agent from CLI</a></li>
+  </ul>
+</section>
+
+<section class="card" id="agents">
+  <h2>Custom agents</h2>
+  <p class="lead">A Markdown persona with YAML frontmatter. Filename is not the identity. The YAML <code>name</code> is.</p>
+  <h3>Where they live</h3>
+  <ul>
+    <li>Repo: <code>.github/agents/*.md</code> or <code>*.agent.md</code> — current project, current branch.</li>
+    <li>User: <code>~/.copilot/agents</code> — every project on that machine.</li>
+    <li>Org / enterprise: <code>/agents</code> in the org <code>.github</code> or <code>.github-private</code> repo.</li>
+  </ul>
+  <p>If the file is missing on the branch you checked out, the workspace agent is not in the picker. <code>user-invokable: false</code> hides it from humans. That is why a profile agent can exist and still not appear.</p>
+  <h3>Frontmatter that the exam actually tests</h3>
+  <table>
+    <tr><th>Key</th><th>Rule</th></tr>
+    <tr><td><code>tools:</code></td><td>Optional allow-list. <strong>Omit the key</strong> to inherit every built-in and MCP tool. An empty array is still a list (usually nothing). Prompt text cannot enlarge a list.</td></tr>
+    <tr><td><code>agents:</code></td><td>Whitelist of subagents a parent may start. Add the child to the <em>caller’s</em> list, not to a sibling.</td></tr>
+    <tr><td><code>disable-model-invocation: true</code></td><td>The parent model may not start this agent as a subagent. Same idea as retired <code>infer: false</code>.</td></tr>
+    <tr><td><code>user-invokable: false</code></td><td>Humans cannot pick it from the dropdown. A parent can still invoke it unless model invocation is also disabled.</td></tr>
+    <tr><td>Handoffs + <code>send:</code></td><td><code>send: true</code> starts a clean switch to the target agent. <code>send: false</code> keeps the same chat, so a “planner” can start implementing.</td></tr>
+  </table>
+  <p>Planner / implementation-planner pattern: tools <code>search</code>, <code>read</code>, maybe <code>fetch</code> and docs MCP. No <code>edit</code>, no <code>execute</code>. Then a handoff labeled Start Implementation with <code>send: true</code>.</p>
+  <div class="callout warning">
+    <strong>Handoffs vs cloud agent.</strong> VS Code handoff objects are documented for IDE agents. GitHub’s custom-agent reference notes that some IDE-only keys are ignored by the cloud agent on github.com. If a stem is about Chat in VS Code, handoffs matter. If it is about the cloud assignee, think issue + draft PR.
+  </div>
+  <ul class="links">
+    <li><a href="https://docs.github.com/en/copilot/concepts/agents/copilot-cli/about-custom-agents">About custom agents</a></li>
+    <li><a href="https://docs.github.com/en/copilot/reference/custom-agents-configuration">Custom agents configuration reference</a></li>
+    <li><a href="https://docs.github.com/en/copilot/reference/customization-cheat-sheet">Customization cheat sheet</a></li>
+    <li><a href="https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/create-custom-agents-for-cli">Create custom agents for Copilot CLI</a></li>
+  </ul>
+</section>
+
+<section class="card" id="mcp">
+  <h2>Model Context Protocol (MCP)</h2>
+  <p class="lead">MCP is how the agent calls systems that are not the git repo: docs, ticketing, Sentry, internal APIs.</p>
+  <h3>Three configuration planes</h3>
+  <ol>
+    <li><strong>Workspace / IDE:</strong> committed <code>.vscode/mcp.json</code> (or project MCP files). This is the “central for every developer on this repo” answer in a VS Code shop.</li>
+    <li><strong>Repo settings on GitHub:</strong> MCP JSON in repository Copilot settings. Applies to the <em>cloud</em> agent and Copilot code review. Not the same file as <code>.vscode/mcp.json</code>, same idea.</li>
+    <li><strong>Org policy + hosted MCP:</strong> policy turns servers on across Copilot surfaces. A GitHub-hosted MCP server is what you use when VS Code on a laptop and Chat on github.com must share tools with no local Docker.</li>
+  </ol>
+  <p>Connecting a server advertises its tools, resources, and prompts. New tools on that server show up on the next session — unless the agent YAML still has a tight <code>tools:</code> allow-list. That is why “give agent1 all tools” and “configure MCP1” travel together: delete the allow-list, then attach the server.</p>
+  <h3>Secrets</h3>
+  <p>Cloud-agent MCP secrets live in the Copilot / Agents environment, not in Actions secrets and not in git. The name must start with <code>COPILOT_MCP_</code>. Reference that name from MCP JSON. Codespaces user secrets do not reach the cloud VM. A plaintext key in <code>server.json</code> fails the security requirement.</p>
+  <p>Default GitHub MCP token for the cloud agent is read-only on the current repository. Cross-repo access is a token-scope problem, not an instructions-file problem.</p>
+  <ul class="links">
+    <li><a href="https://docs.github.com/en/copilot/concepts/coding-agent/mcp-and-coding-agent">MCP and Copilot cloud agent</a></li>
+    <li><a href="https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/configure-mcp-servers">Configure MCP servers for a repository</a></li>
+    <li><a href="https://docs.github.com/en/copilot/tutorials/cloud-agent/give-access-to-resources">Give the cloud agent access to org resources</a></li>
+    <li><a href="https://docs.github.com/en/copilot/how-tos/administer-copilot/manage-mcp-usage/configure-mcp-registry">Configure an MCP registry</a></li>
+  </ul>
+</section>
+
+<section class="card" id="hooks">
+  <h2>Hooks and execution policy</h2>
+  <p class="lead">Hooks are deterministic shell. They do not “ask the model to be careful.” They run at a lifecycle point and can allow, deny, or log.</p>
+  <table>
+    <tr><th>Hook</th><th>When</th><th>Exam use</th></tr>
+    <tr><td><code>preToolUse</code> / <code>pre-exec</code></td><td>Before the tool or shell command runs</td><td>Block <code>sudo</code>, <code>rm -rf /</code>, <code>curl | bash</code>, paths outside the repo. Return JSON <code>permissionDecision: "deny"</code> or exit 1.</td></tr>
+    <tr><td><code>postToolUse</code></td><td>After the tool</td><td>Too late to stop <code>rm -rf</code>.</td></tr>
+    <tr><td><code>errorOccurred</code></td><td>Only when execution fails</td><td>Run a shell command on failure. Not sessionEnd (that also fires on success).</td></tr>
+    <tr><td><code>sessionStart</code> / <code>sessionEnd</code></td><td>Session edges</td><td>Banners and logs. Not a command filter.</td></tr>
+    <tr><td><code>userPromptSubmitted</code></td><td>Each user prompt</td><td>Can mutate or reject the prompt. Wrong tool for a single dangerous command.</td></tr>
+  </table>
+  <p>Repo hooks: <code>.github/hooks/*.json</code>. CLI can also point at <code>.copilot/hooks.yaml</code> with <code>cli.hooks.enabled: true</code>.</p>
+  <p>Permission flags are a second layer: <code>--allow-tool</code>, <code>--deny-tool</code>, <code>--allow-all</code>, <code>--yolo</code>. Deny removes a tool. Require-approval (when the product exposes it) keeps the tool but stops for a human. Read the stem: “still available but needs approval” is not the same as “deny.”</p>
+  <ul class="links">
+    <li><a href="https://docs.github.com/en/copilot/how-tos/copilot-cli/use-hooks">Using hooks with Copilot CLI</a></li>
+    <li><a href="https://docs.github.com/en/copilot/concepts/agents/copilot-cli/comparing-cli-features">CLI customization features compared</a></li>
+    <li><a href="https://code.visualstudio.com/docs/copilot/customization/hooks">VS Code Copilot hooks</a></li>
+  </ul>
+</section>
+
+<section class="card" id="memory">
+  <h2>Copilot memory</h2>
+  <p class="lead">Repo-level facts Copilot learned and may reuse. Not a second git history.</p>
+  <ul>
+    <li>Can be off for an organization. Several case studies start with memory disabled.</li>
+    <li><strong>Delete paths:</strong> an admin / member deletes it in the UI, or it expires after about <strong>28 days</strong> if it is not refreshed.</li>
+    <li><strong>Just-in-time verification:</strong> before a memory influences a suggestion, Copilot checks that the cited code still exists on the current branch. If the snippet is gone (reverted, unmerged, other branch), the memory is ignored. That is how multi-branch / closed-PR noise stays out of suggestions.</li>
+    <li>Memories are not “deleted because the creating file was deleted” and not “wiped on merge.” Those are distractors.</li>
+  </ul>
+  <ul class="links">
+    <li><a href="https://docs.github.com/en/copilot/concepts/agents/copilot-memory">About Copilot memory</a></li>
+    <li><a href="https://docs.github.com/en/copilot/how-tos/use-copilot-agents/copilot-memory/manage-as-administrator">Manage memory as an administrator</a></li>
+  </ul>
+</section>
+
+<section class="card" id="instructions">
+  <h2>Instructions, review guidance, and templates</h2>
+  <p class="lead">Same idea — “tell Copilot how we work” — three different files with three different audiences.</p>
+  <table>
+    <tr><th>File</th><th>Audience</th></tr>
+    <tr><td><code>.github/copilot-instructions.md</code></td><td>Repo-wide coding conventions for Chat / coding agent.</td></tr>
+    <tr><td><code>.github/instructions/*.instructions.md</code></td><td>Path- or surface-scoped instructions. Used when you need “apply this to all .md files” or a dedicated review checklist without changing every Chat turn.</td></tr>
+    <tr><td><code>.github/agents/*</code></td><td>One persona. Does not automatically become Copilot code review policy. Some instruction files are explicitly excluded from code review.</td></tr>
+    <tr><td><code>.github/pull_request_template.md</code></td><td>Humans filling out a PR form. Not the reviewer model.</td></tr>
+  </table>
+  <p>If the stem says “guidance for Copilot code review on every file,” look at the instructions paths, not the PR template and not a random agent file. Product docs still document both the classic <code>copilot-instructions.md</code> and the <code>.github/instructions/</code> folder. Read the options; do not assume last year’s only path.</p>
+  <ul class="links">
+    <li><a href="https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/add-custom-instructions/add-repository-instructions">Add repository custom instructions</a></li>
+    <li><a href="https://docs.github.com/en/copilot/reference/customization-cheat-sheet">Which customization file to use</a></li>
+  </ul>
+</section>
+
+<section class="card" id="actions">
+  <h2>Actions, artifacts, environments, concurrency</h2>
+  <p class="lead">This is the control plane around the agent, not the model.</p>
+  <h3>Artifacts</h3>
+  <p><code>actions/upload-artifact</code> puts <code>plan.md</code> / <code>trace.json</code> on the run page (humans can download them) and <code>actions/download-artifact</code> hands them to later jobs on new runners. Caches are not a review UI. Committing generated plans into git is usually the wrong channel. Manual deletion of an artifact is audit event <code>artifact.destroy</code>.</p>
+  <h3>Human-in-the-loop for plans and production</h3>
+  <p>Create an Actions <strong>environment</strong> (example: <code>plan-review</code>). Add the security team as required reviewers. Do not add the developer team if the rule is “developers must not self-approve.” Job graph:</p>
+  <pre>plan job  →  upload artifact
+execute job  needs: [plan]
+             environment: plan-review</pre>
+  <p>Production secrets use the same idea: environment protection rules pause the job until a human clicks. Fully autonomous deploy of production-secret workflows fails separation of duties.</p>
+  <h3>Concurrency</h3>
+  <p>Workflow-level <code>concurrency</code> groups runs that should not overlap.</p>
+  <ul>
+    <li>Same PR branch, many agent pushes: <code>group: ${{ github.head_ref || github.run_id }}</code> so each source branch has one live run, and non-PR events do not collapse into one global group.</li>
+    <li>Fan-out / fan-in: two jobs with no <code>needs</code> run in parallel; the merger job has <code>needs: [job_a, job_b]</code>. Concurrency is not fan-in. <code>needs</code> is.</li>
+  </ul>
+  <h3>Quality gates on agent PRs</h3>
+  <p>Trigger validation with <code>on: pull_request</code>. Tests are a <code>run:</code> step (<code>npm test</code> in the Node examples). CodeQL is two official actions: <code>github/codeql-action/init</code> then <code>github/codeql-action/analyze</code>. Built-in security signals on generated code: secret scanning and CodeQL, not lint and not “median time to merge.”</p>
+  <h3><code>GITHUB_TOKEN</code> least privilege</h3>
+  <pre>permissions:
+  contents: read          # workflow default is read-only
+jobs:
+  update_artifacts:
+    permissions:
+      contents: write     # only the writer job
+      pull-requests: write  # only if that job opens a PR</pre>
+  <ul class="links">
+    <li><a href="https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-and-share-data-with-workflow-artifacts">Workflow artifacts</a></li>
+    <li><a href="https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/control-the-concurrency-of-workflows-and-jobs">Control workflow concurrency</a></li>
+    <li><a href="https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment">Using environments for deployment</a></li>
+    <li><a href="https://docs.github.com/en/actions/security-for-github-actions/security-guides/automatic-token-authentication">GITHUB_TOKEN permissions</a></li>
+    <li><a href="https://docs.github.com/en/code-security/code-scanning/integrating-with-code-scanning/using-code-scanning-with-your-existing-ci-system">CodeQL in Actions</a></li>
+  </ul>
+</section>
+
+<section class="card" id="governance">
+  <h2>Rulesets, CODEOWNERS, and token scope</h2>
+  <p class="lead">When the agent keeps doing the wrong thing, stop asking it. Change what GitHub will accept.</p>
+  <ul>
+    <li><strong>Agent rewrites <code>.github/workflows</code> to skip failing checks.</strong> A branch ruleset that restricts that path. Instructions files are advisory.</li>
+    <li><strong>Workflow and infra paths need named reviewers.</strong> CODEOWNERS names them. Branch protection or a ruleset makes those reviews required.</li>
+    <li><strong>Protect main, still let the agent open PRs.</strong> “Require pull request before merging” on main. Do not ban the agent from feature branches.</li>
+    <li><strong>Agent read files in a sibling repo.</strong> That is credential scope. A fine-grained PAT limited to <code>product-api</code>, stored as the agent’s secret, is an authorization boundary. A sentence in custom instructions is not.</li>
+    <li><strong>Agent-only API token, Actions secrets banned.</strong> Copilot environment secret. Not git, not Actions.</li>
+  </ul>
+  <ul class="links">
+    <li><a href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets">About rulesets</a></li>
+    <li><a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners">About CODEOWNERS</a></li>
+    <li><a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens">Fine-grained personal access tokens</a></li>
+  </ul>
+</section>
+
+<section class="card" id="audit">
+  <h2>Audit logs and long retention</h2>
+  <p>GitHub Enterprise Cloud keeps native audit logs on the order of months (about 180 days) and Git events for days. Two-year retention is longer than that, so you <strong>stream</strong> the enterprise audit log to an external store. Azure Event Hubs is the Azure option the exam likes. “Configure retention” and “enable Git events” do not stretch native storage to two years.</p>
+  <p>Who deleted an Actions artifact: search the org audit log for <code>action:artifact.destroy</code>. PR comments and git history will not have it.</p>
+  <ul class="links">
+    <li><a href="https://docs.github.com/en/enterprise-cloud@latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/streaming-the-audit-log-for-your-enterprise">Stream the enterprise audit log</a></li>
+    <li><a href="https://docs.github.com/en/organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/reviewing-the-audit-log-for-your-organization">Review the organization audit log</a></li>
+  </ul>
+</section>
+
+<section class="card" id="modernize">
+  <h2>.NET Copilot app modernization</h2>
+  <p class="lead">A packaged multi-agent flow for upgrading a legacy app (exam story: .NET 6 App1 → .NET 10).</p>
+  <table>
+    <tr><th>File</th><th>Role</th></tr>
+    <tr><td><code>assessment.md</code></td><td>Analysis: breaking changes, deprecated patterns, whether upgrade steps and tests look good. Humans validate this before a retry.</td></tr>
+    <tr><td><code>plan.md</code></td><td>How the agent proposes to change code. Review it; do not treat it as proof the assessment is true.</td></tr>
+    <tr><td><code>tasks.md</code></td><td>Work items derived from the plan. Existence of the file is not a security gate.</td></tr>
+  </table>
+  <p>Unsafe to fully delegate: signing off that the assessment is accurate (especially if it found a vulnerability) and approving Git commits. Generating the files is the agent’s job.</p>
+  <ul class="links">
+    <li><a href="https://learn.microsoft.com/en-us/dotnet/core/porting/github-copilot-app-modernization/overview">GitHub Copilot app modernization for .NET</a></li>
+  </ul>
+</section>
+
+<section class="card" id="cases">
+  <h2>How the two case studies use these topics</h2>
+  <p class="lead">Not questions. A map so a Contoso or Litware stem does not surprise you.</p>
+  <div class="grid">
+    <article class="mini">
+      <h3>Contoso</h3>
+      <p><code>repo1</code> portal (frontend + api) plus <code>repo2</code> legacy App1. Learn MCP is allowed at the org but each developer wired it themselves — centralize with workspace <code>mcp.json</code>. agent2 is a planner: search + read, no edit. UI drift is a folder-structure instruction problem. Modernization retry starts at <code>assessment.md</code>.</p>
+      <p>Log trap: <code>CLIMCPServerEnabled=false</code> means the CLI MCP server is off even if the org registry is “on.” Count session IDs; do not invent servers.</p>
+    </article>
+    <article class="mini">
+      <h3>Litware</h3>
+      <p>Three repos, agent1 on product-api, agent2 on infra-terraform, MCP1 needs a key, memory off, SG_Dev vs SG_Review.</p>
+      <p>Scope leak → fine-grained PAT. Empty green PR → session log. All tools → delete the <code>tools:</code> line. MCP key → <code>COPILOT_MCP_</code> Copilot secret. Plan approval → <code>plan-review</code> environment owned by SG_Review only. Shared file fights are either isolated branches + overlap checks (written guideline) or a concurrency group (some keys serialize the workflows). Know both stories.</p>
+    </article>
+  </div>
+  <div class="callout trainer-note">
+    <strong>Study rhythm.</strong> Read one topic here, then do that slice of questions in your other app. When a stem says “must,” “must not,” “without affecting Chat,” or “all licensed members,” match it to a platform control in this file before you pick an instructions-file distractor.
+  </div>
+</section>
+
+<p class="footer">Companion to the practice questions. Docs retrieved August 2026; product names move (coding agent / cloud agent). Prefer the live GitHub Docs page if a UI label changed.</p>
+    </main>
+  </div>
+</div>
+<script>
+"use strict";
+function spy(){
+  var links = Array.from(document.querySelectorAll(".toc a"));
+  var current = links[0];
+  links.forEach(function(a){
+    var el = document.querySelector(a.getAttribute("href"));
+    if (el && el.getBoundingClientRect().top < 90) current = a;
+  });
+  links.forEach(function(a){ a.classList.toggle("active", a === current); });
+}
+window.addEventListener("scroll", function(){
+  var doc = document.documentElement;
+  var p = doc.scrollTop / (doc.scrollHeight - window.innerHeight);
+  document.getElementById("bar").style.width = Math.max(0, Math.min(1, p)) * 100 + "%";
+  spy();
+});
+spy();
+</script>
+</body>
+</html>
